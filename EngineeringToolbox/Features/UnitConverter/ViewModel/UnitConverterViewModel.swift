@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 /// The single source of truth for the converter screen.
 /// The View reads/writes these @Published properties and never touches
