@@ -11,7 +11,7 @@ import Foundation
 /// The View reads/writes these @Published properties and never touches
 /// Measurement/Dimension math directly — that logic lives here.
 @Observable
-final class ConverterViewModel {
+final class UnitConverterViewModel {
 
     // MARK: - Published state
 

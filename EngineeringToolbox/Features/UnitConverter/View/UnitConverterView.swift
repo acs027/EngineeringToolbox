@@ -10,10 +10,9 @@ import SwiftUI
 import ScientificKeypad
 
 struct UnitConverterView: View {
-    @State private var viewModel = ConverterViewModel()
-    @FocusState private var inputIsFocused: Bool
+    @State private var viewModel = UnitConverterViewModel()
     @State private var keypad = KeypadCoordinator()
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -26,16 +25,15 @@ struct UnitConverterView: View {
                     }
                     .pickerStyle(.menu)
                 }
-                
+
                 Section("Convert") {
                     ScientificNumberField(
                         title: "Value",
                         value: $viewModel.inputValue
                     )
                     .font(.title2)
-                    .environment(keypad)
-                    
-                    HStack(spacing: 12) {
+
+                    HStack {
                         UnitPickerView(
                             title: "From",
                             units: viewModel.availableUnits,
@@ -43,7 +41,6 @@ struct UnitConverterView: View {
                         )
                         Spacer()
                         Button {
-                            inputIsFocused = false
                             viewModel.swapUnits()
                         } label: {
                             Image(systemName: "arrow.left.arrow.right.circle.fill")
@@ -58,30 +55,26 @@ struct UnitConverterView: View {
                         )
                     }
                 }
-                
+
                 Section("Result") {
                     Text(viewModel.resultText)
                         .font(.system(.largeTitle, design: .rounded))
                         .fontWeight(.semibold)
-                    
+
                     Text(viewModel.summaryText)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }
+            .environment(keypad)
             .safeAreaInset(edge: .bottom) {
                 if keypad.activeFieldID != nil {
                     CalculatorKeypadBar(coordinator: keypad)
-                        .transition(.move(edge: .bottom))
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
+            .animation(.easeInOut(duration: 0.2), value: keypad.activeFieldID)
             .navigationTitle("Unit Converter")
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") { inputIsFocused = false }
-                }
-            }
         }
     }
 }
